@@ -50,6 +50,31 @@ function setUiLanguage_(lang){if(!LANGUAGES_[lang])return;
  }
  scheduleDomTranslation_();
 }
-document.addEventListener('change',ev=>{if(ev.target.matches('.ui-language-select'))setUiLanguage_(ev.target.value);});
-new MutationObserver(scheduleDomTranslation_).observe(document.documentElement,{childList:true,subtree:true});
-document.addEventListener('DOMContentLoaded',translateDom_);
+// Delegated listeners cover the login selector and the dashboard selector.
+// `input` supports browsers that update selects before the `change` event.
+function onLanguageSelection_(event) {
+  const control = event.target;
+  if (!control || !control.matches || !control.matches('.ui-language-select')) return;
+  if (!LANGUAGES_[control.value]) return;
+  if (control.value !== activeLanguage_) setUiLanguage_(control.value);
+}
+document.addEventListener('change', onLanguageSelection_, true);
+document.addEventListener('input', onLanguageSelection_, true);
+
+// Expose a small diagnostic interface; no credentials or backend access.
+window.MohCleanLanguage = Object.freeze({
+  set: setUiLanguage_,
+  get: getUiLanguage_,
+  available: Object.keys(LANGUAGES_)
+});
+
+new MutationObserver(scheduleDomTranslation_).observe(document.documentElement, {
+  childList: true, subtree: true
+});
+if (document.readyState === 'loading') {
+  document.addEventListener('DOMContentLoaded', translateDom_, {once:true});
+} else {
+  translateDom_();
+}
+window.addEventListener('pageshow', translateDom_);
+
