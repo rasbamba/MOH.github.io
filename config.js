@@ -1,5 +1,6 @@
-/* Public configuration only. NEVER place passwords or Google credentials here. */
+
+/* Moh-clean Google Apps Script Configuration */
+
 window.MOH_CLEAN_CONFIG = Object.freeze({
-  // Paste the DEPLOYED Apps Script web app URL ending in /exec (not /dev).
-  appsScriptUrl: https://script.google.com/macros/s/AKfycby-gAlsMHUHdtFmEzG5yDUtns3m2NyJLRXLxGH79lMZyjmomXYDVlZcVsRRJsvJ0XKM_Q/exec
+  appsScriptUrl: "https://script.google.com/macros/s/AKfycby-gAlsMHUHdtFmEzG5yDUtns3m2NyJLRXLxGH79lMZyjmomXYDVlZcVsRRJsvJ0XKM_Q/exec"
 });
