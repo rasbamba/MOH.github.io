@@ -1,0 +1,8 @@
+/* Public GitHub Pages shell: backend status only; timesheet print remains untouched. */
+.connection-banner[hidden],.connection-banner a[hidden]{display:none!important}
+.connection-banner{position:relative;z-index:300;display:flex;flex-wrap:wrap;align-items:center;justify-content:center;gap:12px;
+  padding:10px 18px;background:#fff4d8;color:#5f4b19;border-bottom:1px solid #ead48a;font-weight:700;font-size:12px;text-align:center}
+.connection-banner.bad{background:#fceae8;color:#8c2831;border-color:#e7abae}
+.connection-banner.ok{background:#e6f6f2;color:#12694f;border-color:#abe2d2}
+.connection-banner a{color:inherit;text-decoration:underline}
+@media print{.connection-banner{display:none!important}}

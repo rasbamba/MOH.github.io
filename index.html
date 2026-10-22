@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Arbeitsnachweis · Mitarbeiterportal</title>
+  <link rel="stylesheet" href="./assets/styles.css">
+  <link rel="stylesheet" href="./assets/github.css">
+</head>
+<body>
+<div id="connectionBanner" class="connection-banner" role="status" aria-live="polite" hidden>
+  <span id="connectionText">Connecting securely to Google Sheets…</span>
+  <a id="fallbackAppLink" href="#" target="_blank" rel="noopener noreferrer" hidden>Open the direct app</a>
+</div>
+<div id="toast" class="toast" role="status" aria-live="polite"></div>
+
+<section id="loginScreen" class="auth-screen">
+  <div class="auth-graphic">
+    <div class="graphic-inner">
+      <div class="big-symbol">AN<span>.</span></div>
+      <p class="eyebrow light">ZEITERFASSUNG / ARBEITSNACHWEIS</p>
+      <h1>Ein System.<br>Jeder Arbeitstag.</h1>
+      <p>Tägliche Erfassung, monatliche Nachweise, gesicherte Änderungen und digitale Unterschriften.</p>
+      <div class="graphic-features"><span>31-Tage-Vorlage</span><span>Google Sheets</span><span>A4 / PDF</span></div>
+    </div>
+  </div>
+  <div class="auth-side">
+    <div class="login-box">
+      <div class="login-language-control"><label for="loginLanguage" class="lang-label">Sprache / Language</label><select class="ui-language-select" id="loginLanguage" aria-label="Sprache / Language"><option value="de">Deutsch</option><option value="en">English</option><option value="ar">العربية</option><option value="fr">Français</option><option value="it">Italiano</option></select></div>
+      <div class="mini-brand"><span class="mark">AN</span> Arbeitsnachweis</div>
+      <p class="eyebrow">MITARBEITERPORTAL</p>
+      <h2>Anmelden</h2>
+      <p class="muted">Melden Sie sich mit Ihren vom IT-Administrator bereitgestellten Zugangsdaten an.</p>
+      <form id="loginForm" class="stack">
+        <label>E-Mail-Adresse<input id="loginEmail" type="email" autocomplete="username" required placeholder="name@firma.de"></label>
+        <label>Passwort<input id="loginPassword" type="password" autocomplete="current-password" required placeholder="••••••••••••"></label>
+        <button class="btn primary wide" type="submit">Anmelden <span aria-hidden="true">→</span></button>
+      </form>
+      <p class="footnote">Passwort vergessen? Wenden Sie sich an Ihren IT-Administrator.</p>
+      <div class="security-hint">Zugriffsrechte: Mitarbeiter · Administrator · IT-Administrator</div>
+    </div>
+  </div>
+</section>
+
+<div id="appScreen" class="app-screen hidden">
+  <aside class="sidebar no-print">
+    <div class="side-brand"><span class="mark">AN</span><span>Arbeitsnachweis<small>PERSONALPORTAL</small></span></div>
+    <div class="side-label">ARBEITSPLATZ</div>
+    <nav id="nav" class="nav-list" aria-label="Hauptnavigation">
+      <button data-page="daily" class="nav-link active"><span>◫</span> Tägliche Erfassung</button>
+      <button data-page="monthly" class="nav-link"><span>▦</span> Ganzen Monat ausfüllen</button>
+      <button data-page="records" class="nav-link"><span>▤</span> Monate / Druck</button>
+      <button data-page="admin" class="nav-link role-admin hidden"><span>▥</span> Admin-Dashboard</button>
+      <button data-page="users" class="nav-link role-it hidden"><span>♙</span> Benutzerverwaltung</button>
+    </nav>
+    <div class="sidebar-bottom">
+      <div class="side-card"><strong>Datenschutz</strong><small>Alle Arbeitszeiten liegen im geschützten Google-Sheets-Backend.</small></div>
+      <button class="nav-link" id="logoutBtn"><span>↪</span> Abmelden</button>
+    </div>
+  </aside>
+  <div class="workspace">
+    <header class="topbar no-print">
+      <div><div class="mobile-brand">ARBEITSNACHWEIS</div><span id="crumb">Zeiterfassung / Täglich</span></div>
+      <div class="top-right">
+        <div class="top-language-control"><label for="appLanguage" class="sr-only">Sprache / Language</label><select id="appLanguage" class="ui-language-select" aria-label="Sprache / Language"><option value="de">DE · Deutsch</option><option value="en">EN · English</option><option value="ar">AR · العربية</option><option value="fr">FR · Français</option><option value="it">IT · Italiano</option></select></div>
+        <span id="roleTag" class="role-badge"></span>
+        <button id="changePasswordBtn" class="icon-btn" title="Passwort ändern" aria-label="Passwort ändern">⚙</button>
+        <div id="identityChip" class="user-chip"></div>
+      </div>
+    </header>
+    <div class="mobile-nav no-print" id="mobileNav"></div>
+    <main class="content no-print">
+      <div id="page-daily" class="page">
+        <div class="page-intro"><div><p class="eyebrow">SCHRITT FÜR SCHRITT</p><h1>Tägliche Erfassung</h1><p>Erfassen Sie Ihre Arbeitszeit. Neue Tage werden direkt gespeichert; Änderungen bereits gespeicherter Tage müssen genehmigt werden.</p></div><div class="info-chip">Tagesformular</div></div>
+        <div class="two-col">
+          <div class="panel">
+            <div class="panel-head"><h2>Arbeitstag</h2><span class="tag-soft">NEUE EINGABE / ÄNDERUNG</span></div>
+            <form id="dailyForm" class="form-grid">
+              <label class="full">Datum<input id="dailyDate" type="date" required></label>
+              <label>Beginn<input id="dailyStart" type="time"></label>
+              <label>Ende<input id="dailyEnd" type="time"></label>
+              <label>Pause (Minuten)<input id="dailyBreak" type="number" min="0" max="1440" value="0"></label>
+              <label>Kürzel<select id="dailyCode"><option value="">Normaler Arbeitstag</option><option value="K">K — Krank</option><option value="U">U — Urlaub</option><option value="F">F — Feiertag</option></select></label>
+              <label class="full">Bemerkungen<textarea id="dailyNotes" rows="3" maxlength="500" placeholder="Optionaler Hinweis"></textarea></label>
+              <div class="daily-total full"><div><span>Berechnete Arbeitszeit</span><strong id="dailyCalc">0 Std. 00 Min.</strong></div><small>Ende − Beginn − Pause</small></div>
+              <div class="form-actions full"><button type="submit" class="btn primary">Tag speichern</button><button type="button" id="dailyDeleteBtn" class="btn ghost danger">Löschung beantragen</button></div>
+            </form>
+          </div>
+          <div class="rail">
+            <div class="panel"><div class="panel-head"><h2>Ihr Profil</h2></div><div id="myProfile"></div></div>
+            <div class="panel"><div class="panel-head"><h2>Ihre Unterschrift</h2><span id="signatureState" class="tag-soft">NICHT HINTERLEGT</span></div>
+              <p class="muted small">Einmal speichern und automatisch an Ihre Monatsnachweise anhängen. Spätere Änderungen verändern keine bereits eingereichten Unterschrifts-Snapshots.</p>
+              <div id="signaturePreview" class="signature-preview"><span>Keine Unterschrift gespeichert</span></div>
+              <button id="signatureBtn" class="btn secondary wide" type="button">Unterschrift erfassen / hochladen</button>
+            </div>
+            <div class="panel blue-panel"><p class="eyebrow light">HINWEIS</p><strong>Genehmigungsworkflow</strong><p>Der erste Eintrag für einen Tag wird gespeichert. Jede spätere Änderung oder Löschung wird als Antrag an den Admin gesendet.</p></div>
+          </div>
+        </div>
+      </div>
+
+      <div id="page-monthly" class="page hidden">
+        <div class="page-intro"><div><p class="eyebrow">MONATSERFASSUNG</p><h1>Ganzen Monat ausfüllen</h1><p>Tragen Sie bis zu 31 Tage in einer Übersicht ein. Bereits gespeicherte Werte erzeugen bei Änderungen einen Genehmigungsantrag.</p></div></div>
+        <div class="toolbar panel compact"><label>Monat<input type="month" id="monthlyMonth"></label><button type="button" id="monthlyLoadBtn" class="btn secondary">Monat laden</button><div class="toolbar-end"><span id="monthTotal" class="summary-pill">0 Std. 00 Min.</span><button type="button" id="monthlySaveBtn" class="btn primary">Monat speichern</button></div></div>
+        <div class="panel table-panel"><div class="table-scroll"><table class="edit-table"><thead><tr><th>Tag</th><th>Beginn</th><th>Pause (Min.)</th><th>Ende</th><th>Dauer</th><th>*</th><th>Bemerkungen</th></tr></thead><tbody id="monthlyBody"></tbody></table></div></div>
+        <p class="fineprint">Leere Zeilen werden beim Speichern übersprungen. Eine Löschung bereits gespeicherter Tage wird im Tagesformular beantragt.</p>
+      </div>
+
+      <div id="page-records" class="page hidden">
+        <div class="page-intro"><div><p class="eyebrow">MONATSARCHIV</p><h1>Monat suchen &amp; drucken</h1><p>Monatsnachweis laden, gesicherte Werte prüfen und als A4-Dokument drucken oder PDF speichern.</p></div></div>
+        <div class="panel compact query-bar"><label>Monat<input id="recordsMonth" type="month"></label><label id="recordsEmployeeWrap" class="hidden">Mitarbeiter<select id="recordsEmployee"></select></label><button id="recordsLoadBtn" class="btn secondary">Abfragen</button><div class="toolbar-end"><button id="submitMonthBtn" class="btn secondary">Monat einreichen</button><button id="previewRecordBtn" class="btn secondary">Formular-Vorschau</button><button id="printBtn" class="btn primary">Drucken / PDF</button></div></div>
+        <div id="documentPreviewPanel" class="document-preview panel hidden"><div id="documentPreviewContent"></div></div>
+        <div class="stat-grid" id="recordsStats"></div>
+        <div class="panel"><div class="panel-head"><h2>Gespeicherte Tage</h2><span id="recordsPersonTag"></span></div><div class="table-scroll"><table class="data-table"><thead><tr><th>Tag</th><th>Beginn</th><th>Pause</th><th>Ende</th><th>Dauer</th><th>Kürzel</th><th>Bemerkungen</th><th class="it-edit-col hidden">IT-Aktion</th></tr></thead><tbody id="recordsBody"></tbody></table></div></div>
+        <p class="fineprint">Offene Änderungsanträge sind im Druck nicht enthalten, bis ein Admin sie genehmigt hat. IT-Administratoren können Einträge direkt korrigieren; alle Eingriffe werden protokolliert.</p>
+      </div>
+
+      <div id="page-admin" class="page hidden">
+        <div class="page-intro"><div><p class="eyebrow">TEAM-ÜBERSICHT</p><h1>Admin-Dashboard</h1><p>Monatliche Eingaben überwachen, Arbeitsnachweise anzeigen und Änderungsanträge genehmigen oder ablehnen.</p></div><div class="info-chip">Nur Ansicht &amp; Genehmigung</div></div>
+        <div class="toolbar panel compact"><label>Berichtsmonat<input id="adminMonth" type="month"></label><button id="adminRefreshBtn" class="btn secondary">Aktualisieren</button></div>
+        <div class="stat-grid" id="adminStats"></div>
+        <div class="panel"><div class="panel-head"><h2>Teamfortschritt</h2><span class="tag-soft">MITARBEITERFARBEN</span></div><div class="table-scroll"><table class="data-table"><thead><tr><th>Mitarbeiter</th><th>Status</th><th>Tage</th><th>Stunden</th><th>Änderungen offen</th><th>Aktionen</th></tr></thead><tbody id="teamBody"></tbody></table></div></div>
+        <div class="panel"><div class="panel-head"><h2>Offene Änderungsanträge</h2><span id="requestCount" class="tag-soft">0 OFFEN</span></div><div id="requestsContainer"></div></div>
+      </div>
+
+      <div id="page-users" class="page hidden">
+        <div class="page-intro"><div><p class="eyebrow">IT ADMINISTRATION</p><h1>Benutzerverwaltung</h1><p>Mitarbeiter und Administratoren anlegen, Rollen und Farbmarkierungen verwalten sowie Zugangsdaten zurücksetzen.</p></div></div>
+        <div class="two-col users-layout">
+          <div class="panel"><div class="panel-head"><h2>Neuen Benutzer anlegen</h2></div><form id="createUserForm" class="stack">
+            <label>Name<input name="name" required maxlength="100"></label><label>E-Mail<input name="email" type="email" required></label><label>Firma<input name="company" required maxlength="120"></label>
+            <div class="form-grid"><label>Rolle<select name="role"><option value="EMPLOYEE">Mitarbeiter</option><option value="ADMIN">Administrator</option><option value="IT_ADMIN">IT-Administrator</option></select></label><label>Farbmarkierung<input name="color" type="color" value="#0e9f84"></label></div>
+            <button type="submit" class="btn primary wide">Benutzer erstellen</button>
+          </form></div>
+          <div class="panel"><div class="panel-head"><h2>Alle Benutzer</h2></div><div class="table-scroll"><table class="data-table"><thead><tr><th>Benutzer</th><th>Rolle</th><th>Aktiv</th><th>Aktionen</th></tr></thead><tbody id="usersBody"></tbody></table></div></div>
+        </div>
+      </div>
+    </main>
+  </div>
+</div>
+
+<!-- Modal: reusable for signature/password/edit/create result. -->
+<div id="modalBackdrop" class="modal-backdrop hidden no-print" role="presentation"><div class="modal" role="dialog" aria-modal="true" aria-labelledby="modalTitle"><div class="modal-header"><h2 id="modalTitle"></h2><button id="modalClose" class="icon-btn" aria-label="Schließen">✕</button></div><div id="modalBody"></div></div></div>
+
+<!-- This is the ONLY printed content. Proportions and labels reproduce the uploaded document. -->
+<section id="printSheet" class="print-sheet" aria-label="Druckformular Arbeitsnachweis">
+  <h1>Arbeitsnachweis</h1>
+  <div class="print-info"><div><span>Firma:</span><b id="printCompany"></b></div><div><span>Name des Mitarbeiters:</span><b id="printName"></b></div><div><span>Monat/Jahr:</span><b id="printMonth"></b></div></div>
+  <table class="print-table"><colgroup><col style="width:7%"><col style="width:13%"><col style="width:13%"><col style="width:14%"><col style="width:13%"><col style="width:5%"><col style="width:35%"></colgroup>
+    <thead><tr><th>Tag</th><th>Beginn<br>(Uhrzeit)</th><th>Pause (Dauer)</th><th>Ende (Uhrzeit)</th><th>Dauer<br>(Summe)</th><th>*</th><th>Bemerkungen</th></tr></thead>
+    <tbody id="printDays"></tbody>
+    <tfoot><tr><td colspan="3" class="sum-blank"></td><td class="sum-label">Summe:</td><td id="printTotal"></td><td colspan="2" class="sum-blank"></td></tr></tfoot>
+  </table>
+  <div class="print-sign-row"><div></div><div class="signature-line"><img id="printSignature" alt="Digitale Unterschrift"><span>Unterschrift Arbeitnehmer</span></div></div>
+  <div class="print-key"><div><strong>*) Bitte folgende Kürzel eintragen:</strong></div><div class="print-codes"><div>K&nbsp;&nbsp; Krank</div><div>U&nbsp;&nbsp; Urlaub</div><div>F&nbsp;&nbsp; Feiertag</div></div></div>
+</section>
+<script defer src="./config.js"></script>
+<script defer src="./assets/bridge-client.js"></script>
+<script defer src="./assets/locales.js"></script>
+<script defer src="./assets/client.js"></script>
+</body></html>
